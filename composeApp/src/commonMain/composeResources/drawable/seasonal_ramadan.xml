@@ -51,7 +51,7 @@
     <group android:pivotX="12" android:pivotY="12" android:scaleX="0.3333" android:scaleY="0.3333" android:rotation="0" android:translateX="192" android:translateY="26">
         <path android:pathData="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.3l7.1-.7z" android:fillColor="#FFFFFF" android:fillAlpha="0.6" />
     </group>
-    <group android:pivotX="60" android:pivotY="20" android:scaleX="3.25" android:scaleY="3" android:rotation="0" android:translateX="135" android:translateY="764">
+    <group android:pivotX="60" android:pivotY="20" android:scaleX="3.25" android:scaleY="1.5" android:rotation="0" android:translateX="135" android:translateY="794">
         <path android:pathData="M0 40V30h8V12l2-6 2 6v18h18v-4a14 14 0 0 1 28 0v4h4v-8a12 12 0 0 1 24 0v8h4v-4a14 14 0 0 1 28 0v4h0z" android:fillColor="#06041A" android:fillAlpha="1" />
         <path android:pathData="M104 30V12l2-6 2 6v18h12v10H96V30z" android:fillColor="#06041A" android:fillAlpha="1" />
     </group>

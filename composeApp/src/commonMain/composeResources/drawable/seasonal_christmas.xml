@@ -5,9 +5,6 @@
     android:height="844dp"
     android:viewportWidth="390"
     android:viewportHeight="844">
-    <group android:pivotX="60" android:pivotY="12" android:scaleX="3.25" android:scaleY="2.5" android:rotation="0" android:translateX="135" android:translateY="808">
-        <path android:pathData="M0 12Q15 2 30 12T60 12T90 12T120 12V24H0z" android:fillColor="#EEF5F1" android:fillAlpha="0.95" />
-    </group>
     <group android:pivotX="12" android:pivotY="18" android:scaleX="1.0833" android:scaleY="1.4444" android:rotation="0" android:translateX="251" android:translateY="8">
         <path android:pathData="M12 0v10" android:strokeColor="#E9D8A6" android:strokeAlpha="1" android:strokeWidth="0.8" android:strokeLineCap="round" android:strokeLineJoin="round" />
         <path android:pathData="M10,9h4v3h-4z" android:fillColor="#C9A227" android:fillAlpha="1" />
@@ -32,29 +29,32 @@
     <group android:pivotX="12" android:pivotY="12" android:scaleX="0.4167" android:scaleY="0.4167" android:rotation="0" android:translateX="163" android:translateY="21">
         <path android:pathData="M12 2v20M2 12h20M5 5l14 14M19 5 5 19M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5M3.5 9l2.5 3-2.5 3M20.5 9 18 12l2.5 3" android:strokeColor="#FFFFFF" android:strokeAlpha="0.5" android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round" />
     </group>
-    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.4167" android:scaleY="0.4167" android:rotation="0" android:translateX="53" android:translateY="143">
+    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.4167" android:scaleY="0.4167" android:rotation="0" android:translateX="13" android:translateY="173">
         <path android:pathData="M12 2v20M2 12h20M5 5l14 14M19 5 5 19M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5M3.5 9l2.5 3-2.5 3M20.5 9 18 12l2.5 3" android:strokeColor="#FFFFFF" android:strokeAlpha="0.5" android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round" />
     </group>
-    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5" android:scaleY="0.5" android:rotation="0" android:translateX="339" android:translateY="174">
+    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5" android:scaleY="0.5" android:rotation="0" android:translateX="350" android:translateY="184">
         <path android:pathData="M12 2v20M2 12h20M5 5l14 14M19 5 5 19M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5M3.5 9l2.5 3-2.5 3M20.5 9 18 12l2.5 3" android:strokeColor="#FFFFFF" android:strokeAlpha="0.5" android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round" />
     </group>
-    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5" android:scaleY="0.5" android:rotation="0" android:translateX="10" android:translateY="414">
+    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5" android:scaleY="0.5" android:rotation="0" android:translateX="8" android:translateY="414">
         <path android:pathData="M12 2v20M2 12h20M5 5l14 14M19 5 5 19M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5M3.5 9l2.5 3-2.5 3M20.5 9 18 12l2.5 3" android:strokeColor="#FFFFFF" android:strokeAlpha="0.4" android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round" />
     </group>
-    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5833" android:scaleY="0.5833" android:rotation="0" android:translateX="351" android:translateY="465">
+    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5833" android:scaleY="0.5833" android:rotation="0" android:translateX="353" android:translateY="465">
         <path android:pathData="M12 2v20M2 12h20M5 5l14 14M19 5 5 19M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5M3.5 9l2.5 3-2.5 3M20.5 9 18 12l2.5 3" android:strokeColor="#FFFFFF" android:strokeAlpha="0.45" android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round" />
     </group>
-    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5" android:scaleY="0.5" android:rotation="0" android:translateX="184" android:translateY="684">
+    <group android:pivotX="12" android:pivotY="12" android:scaleX="0.5" android:scaleY="0.5" android:rotation="0" android:translateX="354" android:translateY="624">
         <path android:pathData="M12 2v20M2 12h20M5 5l14 14M19 5 5 19M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5M3.5 9l2.5 3-2.5 3M20.5 9 18 12l2.5 3" android:strokeColor="#FFFFFF" android:strokeAlpha="0.5" android:strokeWidth="1.5" android:strokeLineCap="round" android:strokeLineJoin="round" />
     </group>
-    <group android:pivotX="12" android:pivotY="12.5" android:scaleX="4.5833" android:scaleY="4.8" android:rotation="0" android:translateX="49" android:translateY="727.5">
+    <group android:pivotX="12" android:pivotY="12.5" android:scaleX="2.5833" android:scaleY="4" android:rotation="0" android:translateX="5" android:translateY="741.5">
         <path android:pathData="M12 2l6 8h-3l5 6h-5l6 6H3l6-6H4l5-6H6z" android:fillColor="#1F7A4D" android:fillAlpha="1" />
         <path android:pathData="M10.5,22h3v3h-3z" android:fillColor="#6B4423" android:fillAlpha="1" />
         <path android:pathData="M12 0l.9 2 2.1.2-1.6 1.4.5 2.1L12 4.6 10.1 5.7l.5-2.1L9 2.2 11.1 2z" android:fillColor="#FFD45C" android:fillAlpha="1" />
     </group>
-    <group android:pivotX="12" android:pivotY="12.5" android:scaleX="3.8333" android:scaleY="4" android:rotation="0" android:translateX="320" android:translateY="749.5">
+    <group android:pivotX="12" android:pivotY="12.5" android:scaleX="2.3333" android:scaleY="3.6" android:rotation="0" android:translateX="362" android:translateY="750.5">
         <path android:pathData="M12 2l6 8h-3l5 6h-5l6 6H3l6-6H4l5-6H6z" android:fillColor="#186342" android:fillAlpha="1" />
         <path android:pathData="M10.5,22h3v3h-3z" android:fillColor="#6B4423" android:fillAlpha="1" />
         <path android:pathData="M12 0l.9 2 2.1.2-1.6 1.4.5 2.1L12 4.6 10.1 5.7l.5-2.1L9 2.2 11.1 2z" android:fillColor="#FFD45C" android:fillAlpha="1" />
+    </group>
+    <group android:pivotX="60" android:pivotY="12" android:scaleX="3.25" android:scaleY="1.6667" android:rotation="0" android:translateX="135" android:translateY="812">
+        <path android:pathData="M0 12Q15 2 30 12T60 12T90 12T120 12V24H0z" android:fillColor="#EEF5F1" android:fillAlpha="0.95" />
     </group>
 </vector>
