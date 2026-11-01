@@ -10,17 +10,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
@@ -29,44 +24,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import kotlinx.coroutines.delay
 
-private val PreviewWidth = 176.dp
+private val PreviewWidth = SeekPreviewWidth
 private val PreviewHeight = 99.dp
 private val PreviewGap = 14.dp
-private const val MaxCachedFrames = 48
 
 /**
- * Netflix-style still frame shown above the seek bar while scrubbing. Frames are fetched per
- * [SeekPreviewBucketMs] interval and cached, so moving back over the same spot is instant.
- * Must be placed inside a container that has the timeline's bounds.
+ * Netflix-style still frame shown above the seek bar while scrubbing. Frames come from
+ * [SeekPreviewStore], which prefetches them during playback; the frame under the finger is
+ * requested first. Must be placed inside a container that has the timeline's bounds.
  */
 @Composable
 internal fun SeekPreviewPopup(
-    source: SeekPreviewSource,
+    store: SeekPreviewStore,
     positionMs: Long,
     durationMs: Long,
     timelineWidthPx: Int,
 ) {
     val density = LocalDensity.current
-    val grabber = remember(source) { SeekPreviewFrameGrabber(source) }
-    DisposableEffect(grabber) { onDispose { grabber.release() } }
-    val frames = remember(source) { mutableStateMapOf<Long, ImageBitmap>() }
+    val bucket = store.bucketOf(positionMs)
+    LaunchedEffect(store, bucket) { store.request(positionMs) }
 
-    val bucket = (positionMs / SeekPreviewBucketMs).coerceAtLeast(0L)
+    // Exact frame when loaded, otherwise the nearest one already fetched.
+    val frame = store.frameNear(positionMs)
     val previewWidthPx = with(density) { PreviewWidth.roundToPx() }
-
-    LaunchedEffect(grabber, bucket) {
-        if (frames.containsKey(bucket)) return@LaunchedEffect
-        delay(90) // wait until the finger slows down a little before fetching
-        val frameTime = (bucket * SeekPreviewBucketMs + SeekPreviewBucketMs / 2).coerceAtMost(durationMs)
-        val frame = grabber.frameAt(frameTime, previewWidthPx) ?: return@LaunchedEffect
-        if (frames.size >= MaxCachedFrames) frames.keys.firstOrNull()?.let { frames.remove(it) }
-        frames[bucket] = frame
-    }
-
-    // Show the exact frame when it's ready, otherwise the closest cached one while it loads.
-    val frame = frames[bucket] ?: frames.keys.minByOrNull { kotlin.math.abs(it - bucket) }?.let { frames[it] }
 
     val fraction = if (durationMs > 0L) (positionMs.toFloat() / durationMs).coerceIn(0f, 1f) else 0f
     val gapPx = with(density) { PreviewGap.roundToPx() }

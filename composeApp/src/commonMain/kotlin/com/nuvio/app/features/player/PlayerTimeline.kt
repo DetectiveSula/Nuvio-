@@ -129,7 +129,7 @@ internal fun PlayerTimeline(
     val sliderState = remember(rangeEnd) { SliderState(trackRange = 0f..rangeEnd) }
     sliderState.value = displayedPositionMs.coerceIn(0L, durationMs).toFloat()
 
-    val previewSource = LocalSeekPreviewSource.current
+    val previewStore = LocalSeekPreviewStore.current
     var timelineWidthPx by remember { mutableStateOf(0) }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -198,9 +198,9 @@ internal fun PlayerTimeline(
                 .onSizeChanged { timelineWidthPx = it.width }
                 .semantics { contentDescription = description },
         )
-        if (isInteracting && previewSource != null && timelineWidthPx > 0) {
+        if (isInteracting && previewStore != null && timelineWidthPx > 0) {
             SeekPreviewPopup(
-                source = previewSource,
+                store = previewStore,
                 positionMs = scrubPosition ?: displayedPositionMs,
                 durationMs = durationMs,
                 timelineWidthPx = timelineWidthPx,

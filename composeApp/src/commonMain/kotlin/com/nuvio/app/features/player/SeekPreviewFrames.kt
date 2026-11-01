@@ -2,6 +2,7 @@ package com.nuvio.app.features.player
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.unit.dp
 
 /** The stream the seek-bar preview frames are taken from. */
 data class SeekPreviewSource(
@@ -13,10 +14,10 @@ data class SeekPreviewSource(
  * Provided by the player screen around its controls. Null when preview frames can't work, for
  * example during peer-to-peer torrent playback where the file isn't fully reachable.
  */
-internal val LocalSeekPreviewSource = staticCompositionLocalOf<SeekPreviewSource?> { null }
+internal val LocalSeekPreviewStore = staticCompositionLocalOf<SeekPreviewStore?> { null }
 
-/** Interval the preview frames are grouped into while scrubbing, so nearby positions reuse a frame. */
-internal const val SeekPreviewBucketMs = 5_000L
+/** Width the preview frames are fetched and shown at. */
+internal val SeekPreviewWidth = 176.dp
 
 /** Only plain web links and local files can be opened for preview frames. */
 internal fun seekPreviewSourceOrNull(url: String?, headers: Map<String, String>): SeekPreviewSource? {
