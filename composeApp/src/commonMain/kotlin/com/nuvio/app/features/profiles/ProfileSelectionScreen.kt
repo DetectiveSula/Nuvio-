@@ -161,13 +161,6 @@ fun ProfileSelectionScreen(
 
                 Spacer(modifier = Modifier.height(if (isTabletLayout) 22.dp else 18.dp))
 
-                SeasonalGreetingChip(
-                    theme = seasonalTheme,
-                    modifier = Modifier.graphicsLayer { alpha = titleAlpha.value },
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
                 Text(
                     text = stringResource(Res.string.profile_who_is_watching),
                     style = MaterialTheme.typography.headlineLarge.copy(

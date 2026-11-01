@@ -4,16 +4,6 @@
     <string name="theme_rose_gold">Rose Gold</string>
     <string name="theme_arctic_blue">Arctic Blue</string>
     <string name="theme_graphite">Graphite</string>
-    <string name="profile_season_christmas">Merry Christmas</string>
-    <string name="profile_season_halloween">Happy Halloween</string>
-    <string name="profile_season_easter">Happy Easter</string>
-    <string name="profile_season_eid">Eid Mubarak</string>
-    <string name="profile_season_ramadan">Ramadan Kareem</string>
-    <string name="profile_season_new_year">Happy New Year</string>
-    <string name="profile_season_summer">Hello Summer</string>
-    <string name="profile_season_autumn">Hello Autumn</string>
-    <string name="profile_season_winter">Hello Winter</string>
-    <string name="profile_season_spring">Hello Spring</string>
     <string name="profile_choose_background">Choose Profile Background</string>
     <string name="profile_background_member_note">Custom background URLs can be configured from the Nuvio web panel.</string>
     <string name="profile_background_normal">Normal</string>
