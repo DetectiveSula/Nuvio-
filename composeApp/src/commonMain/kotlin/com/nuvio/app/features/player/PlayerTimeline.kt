@@ -30,6 +30,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -128,7 +129,11 @@ internal fun PlayerTimeline(
     val sliderState = remember(rangeEnd) { SliderState(trackRange = 0f..rangeEnd) }
     sliderState.value = displayedPositionMs.coerceIn(0L, durationMs).toFloat()
 
+    val previewSource = LocalSeekPreviewSource.current
+    var timelineWidthPx by remember { mutableStateOf(0) }
+
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+      Box(modifier = modifier.fillMaxWidth()) {
         Slider(
             state = sliderState,
             onValueChange = { value ->
@@ -185,13 +190,23 @@ internal fun PlayerTimeline(
                         },
                 )
             },
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(24.dp)
                 .wrapContentHeight(Alignment.Bottom, unbounded = true)
                 .requiredHeight(48.dp)
+                .onSizeChanged { timelineWidthPx = it.width }
                 .semantics { contentDescription = description },
         )
+        if (isInteracting && previewSource != null && timelineWidthPx > 0) {
+            SeekPreviewPopup(
+                source = previewSource,
+                positionMs = scrubPosition ?: displayedPositionMs,
+                durationMs = durationMs,
+                timelineWidthPx = timelineWidthPx,
+            )
+        }
+      }
     }
 }
 

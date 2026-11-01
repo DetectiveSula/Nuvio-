@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -274,12 +275,20 @@ internal fun PlayerScreenRuntime.RenderPlayerRuntimeUi() {
             )
         }
 
-        RenderPlayerControls(
-            displayedPositionMs = displayedPositionMs,
-            isEpisode = isEpisode,
-            folded = fold != null,
-            modifier = panelModifier,
-        )
+        CompositionLocalProvider(
+            LocalSeekPreviewSource provides if (isP2pPlaybackActive) {
+                null
+            } else {
+                seekPreviewSourceOrNull(activeSourceUrl, activeSourceHeaders)
+            },
+        ) {
+            RenderPlayerControls(
+                displayedPositionMs = displayedPositionMs,
+                isEpisode = isEpisode,
+                folded = fold != null,
+                modifier = panelModifier,
+            )
+        }
         Box(modifier = videoModifier) {
             RenderPlaybackOverlays(
                 runtime = runtime,
