@@ -115,6 +115,7 @@ fun ProfileSelectionScreen(
 
     val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val backgroundProfile = profileState.activeProfile ?: profileState.profiles.firstOrNull()
+    val seasonalTheme = remember { currentSeasonalTheme() }
 
     BoxWithConstraints(
         modifier = modifier
@@ -124,6 +125,7 @@ fun ProfileSelectionScreen(
         ProfileBackgroundBackdrop(
             profile = backgroundProfile,
             modifier = Modifier.fillMaxSize(),
+            seasonalTheme = seasonalTheme,
         )
 
         AnimatedVisibility(
@@ -158,6 +160,13 @@ fun ProfileSelectionScreen(
                 )
 
                 Spacer(modifier = Modifier.height(if (isTabletLayout) 22.dp else 18.dp))
+
+                SeasonalGreetingChip(
+                    theme = seasonalTheme,
+                    modifier = Modifier.graphicsLayer { alpha = titleAlpha.value },
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
                     text = stringResource(Res.string.profile_who_is_watching),

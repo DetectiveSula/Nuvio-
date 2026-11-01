@@ -23,6 +23,7 @@ import com.nuvio.app.features.membership.resolveProfileBackground
 fun ProfileBackgroundBackdrop(
     profile: NuvioProfile?,
     modifier: Modifier = Modifier,
+    seasonalTheme: SeasonalTheme? = null,
 ) {
     val memberAccess by remember {
         MemberAccessRepository.ensureStarted()
@@ -62,7 +63,12 @@ fun ProfileBackgroundBackdrop(
             null -> null
         }
 
-        if (backgroundModel == null) {
+        if (backgroundModel == null && seasonalTheme != null) {
+            SeasonalBackdrop(
+                theme = seasonalTheme,
+                modifier = Modifier.fillMaxSize(),
+            )
+        } else if (backgroundModel == null) {
             ProfileMeshBackground(
                 profileColor = profileColor,
                 modifier = Modifier.fillMaxSize(),

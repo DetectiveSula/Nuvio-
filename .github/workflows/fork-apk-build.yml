@@ -4,7 +4,7 @@ name: Fork APK Build
 # The debug app installs as "com.nuviodebug.com", next to the official Nuvio app.
 on:
   push:
-    branches: ['more-profiles']
+    branches: ['more-profiles', 'seasonal-profiles']
   workflow_dispatch:
 
 permissions:
@@ -63,5 +63,5 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --title "Nuvio fork build #${GITHUB_RUN_NUMBER} (${GITHUB_REF_NAME})" \
-            --notes "Debug APK built from ${GITHUB_REF_NAME} at ${GITHUB_SHA}. Supports up to 12 profiles. Installs as a separate app next to the official Nuvio." \
+            --notes "Debug APK built from ${GITHUB_REF_NAME} at ${GITHUB_SHA}. Seasonal profile screen. Installs as a separate app next to the official Nuvio." \
             --prerelease
