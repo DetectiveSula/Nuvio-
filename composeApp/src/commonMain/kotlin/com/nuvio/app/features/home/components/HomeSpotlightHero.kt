@@ -62,6 +62,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.nuvio.app.core.ui.ScreenActivityEffect
+import com.nuvio.app.core.ui.glassSurface
+import com.nuvio.app.core.ui.isGlassTheme
 import com.nuvio.app.features.home.MetaPreview
 import com.nuvio.app.features.home.stableKey
 import com.nuvio.app.features.library.LibraryClock
@@ -256,13 +258,18 @@ private fun HomeTabPill(selected: HomeTab, onSelect: (HomeTab) -> Unit) {
     ) {
         HomeTab.entries.forEach { tab ->
             val isSelected = tab == selected
+            val glassTabs = isGlassTheme()
             val containerColor by animateColorAsState(
-                targetValue = if (isSelected) Color.White.copy(alpha = 0.92f) else Color.Transparent,
+                targetValue = when {
+                    !isSelected -> Color.Transparent
+                    glassTabs -> Color.White.copy(alpha = 0.28f)
+                    else -> Color.White.copy(alpha = 0.92f)
+                },
                 animationSpec = tween(220),
                 label = "HomeTabContainer",
             )
             val contentColor by animateColorAsState(
-                targetValue = if (isSelected) Color(0xFF08080A) else Color.White,
+                targetValue = if (isSelected && !glassTabs) Color(0xFF08080A) else Color.White,
                 animationSpec = tween(220),
                 label = "HomeTabContent",
             )
@@ -298,10 +305,18 @@ private fun SpotlightCard(
     var logoFailed by remember(item.id, item.logo) { mutableStateOf(false) }
     val logoUrl = item.logo?.takeIf { it.isNotBlank() }
 
+    val glassFrame = isGlassTheme()
     Box(
         modifier = modifier
             .fillMaxWidth()
             .widthIn(max = 420.dp)
+            .then(
+                if (glassFrame) {
+                    Modifier.glassSurface(RoundedCornerShape(28.dp)).padding(8.dp)
+                } else {
+                    Modifier
+                },
+            )
             .aspectRatio(0.72f)
             .shadow(26.dp, shape)
             .clip(shape)
@@ -393,20 +408,21 @@ private fun SpotlightButtons(
     val isLocalLibrary = libraryUiState.sourceMode == LibrarySourceMode.LOCAL
     val pill = RoundedCornerShape(23.dp)
 
+    val glass = isGlassTheme()
+    val playContent = if (glass) Color.White else Color(0xFF08080A)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(
             modifier = Modifier
                 .weight(1f)
                 .height(46.dp)
-                .clip(pill)
-                .background(Color(0xFFF5F5F7))
+                .then(if (glass) Modifier.glassSurface(pill, strong = true) else Modifier.clip(pill).background(Color(0xFFF5F5F7)))
                 .clickable(enabled = onItemClick != null) { onItemClick?.invoke(item) },
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Rounded.PlayArrow, contentDescription = null, tint = Color(0xFF08080A), modifier = Modifier.size(22.dp))
+            Icon(Icons.Rounded.PlayArrow, contentDescription = null, tint = playContent, modifier = Modifier.size(22.dp))
             Spacer(modifier = Modifier.width(6.dp))
-            Text(stringResource(Res.string.action_play), color = Color(0xFF08080A), fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
+            Text(stringResource(Res.string.action_play), color = playContent, fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
         }
         Row(
             modifier = Modifier

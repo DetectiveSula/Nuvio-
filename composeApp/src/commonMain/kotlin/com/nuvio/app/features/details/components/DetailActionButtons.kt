@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nuvio.app.core.ui.AppIconResource
 import com.nuvio.app.core.ui.appIconPainter
+import com.nuvio.app.core.ui.isGlassTheme
 import nuvio.composeapp.generated.resources.Res
 import nuvio.composeapp.generated.resources.action_play
 import nuvio.composeapp.generated.resources.details_actions_menu_label
@@ -99,6 +101,7 @@ fun DetailActionButtons(
         label = "detail_action_menu_progress",
     )
     val hasSecondaryActions = secondaryActions.isNotEmpty()
+    val glass = isGlassTheme()
 
     Box(
         modifier = modifier
@@ -118,8 +121,17 @@ fun DetailActionButtons(
                     .weight(1f)
                     .height(buttonHeight),
                 shape = playShape,
-                color = if (playEnabled) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = if (playEnabled) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                color = when {
+                    !playEnabled -> MaterialTheme.colorScheme.surfaceVariant
+                    glass -> Color.White.copy(alpha = 0.30f)
+                    else -> MaterialTheme.colorScheme.onBackground
+                },
+                contentColor = when {
+                    !playEnabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    glass -> Color.White
+                    else -> MaterialTheme.colorScheme.background
+                },
+                border = if (glass && playEnabled) BorderStroke(1.dp, Color.White.copy(alpha = 0.55f)) else null,
             ) {
                 Row(
                     modifier = Modifier

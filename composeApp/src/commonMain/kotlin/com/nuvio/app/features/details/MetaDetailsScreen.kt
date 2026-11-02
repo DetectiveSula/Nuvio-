@@ -82,6 +82,8 @@ import com.nuvio.app.core.network.NetworkCondition
 import com.nuvio.app.core.network.NetworkStatusRepository
 import com.nuvio.app.core.i18n.localizedSeasonEpisodeCode
 import com.nuvio.app.core.ui.NuvioBackButton
+import com.nuvio.app.core.ui.GlassBackdrop
+import com.nuvio.app.core.ui.isGlassTheme
 import com.nuvio.app.core.ui.LocalVerticalBarPadding
 import com.nuvio.app.core.ui.verticalBarWidth
 import com.nuvio.app.core.ui.NuvioCardDepthSurface
@@ -1150,6 +1152,9 @@ fun MetaDetailsScreen(
                                             .background(dominantBackdropColor),
                                     )
                                 }
+                            }
+                            if (isGlassTheme()) {
+                                GlassBackdrop(modifier = Modifier.fillMaxSize())
                             }
                             LazyColumn(
                                 state = listState,

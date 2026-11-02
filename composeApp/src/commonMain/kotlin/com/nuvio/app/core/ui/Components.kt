@@ -83,20 +83,35 @@ fun NuvioScreen(
 ) {
     val tokens = MaterialTheme.nuvio
     val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    LazyColumn(
-        state = listState,
-        modifier = modifier
-            .fillMaxSize()
-            .background(tokens.colors.background),
-        contentPadding = PaddingValues(
-            start = horizontalPadding,
-            top = topPadding ?: tokens.spacing.screenTop + statusBarTop + nuvioPlatformExtraTopPadding,
-            end = horizontalPadding,
-            bottom = nuvioSafeBottomPadding(tokens.spacing.screenBottom),
-        ).withVerticalBar(),
-        verticalArrangement = Arrangement.spacedBy(tokens.spacing.listGap),
-        content = content,
-    )
+    val contentPadding = PaddingValues(
+        start = horizontalPadding,
+        top = topPadding ?: tokens.spacing.screenTop + statusBarTop + nuvioPlatformExtraTopPadding,
+        end = horizontalPadding,
+        bottom = nuvioSafeBottomPadding(tokens.spacing.screenBottom),
+    ).withVerticalBar()
+    if (isGlassTheme()) {
+        // Glass theme: drifting colour glows behind the screen instead of a flat background.
+        Box(modifier = modifier.fillMaxSize()) {
+            GlassBackdrop(modifier = Modifier.matchParentSize())
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = contentPadding,
+                verticalArrangement = Arrangement.spacedBy(tokens.spacing.listGap),
+                content = content,
+            )
+        }
+    } else {
+        LazyColumn(
+            state = listState,
+            modifier = modifier
+                .fillMaxSize()
+                .background(tokens.colors.background),
+            contentPadding = contentPadding,
+            verticalArrangement = Arrangement.spacedBy(tokens.spacing.listGap),
+            content = content,
+        )
+    }
 }
 
 internal fun Modifier.nuvioConsumePointerEvents(): Modifier =

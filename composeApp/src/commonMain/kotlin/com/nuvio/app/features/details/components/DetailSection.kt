@@ -1,5 +1,10 @@
 package com.nuvio.app.features.details.components
 
+import com.nuvio.app.core.ui.glassSurface
+import com.nuvio.app.core.ui.isGlassTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -19,8 +24,13 @@ fun DetailSection(
     showHeader: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val glass = isGlassTheme()
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .then(
+                if (glass) Modifier.glassSurface(RoundedCornerShape(22.dp)).padding(14.dp) else Modifier,
+            ),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         if (showHeader) {

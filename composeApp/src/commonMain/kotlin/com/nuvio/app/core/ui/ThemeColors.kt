@@ -173,6 +173,21 @@ object ThemeColors {
         backgroundCard = Color(0xFF222222),
     )
 
+    /** Glass: deep violet-black base for the frosted Glass look (see GlassStyle.kt). */
+    val Glass = ThemeColorPalette(
+        secondary = Color(0xFFC9B6FF),
+        secondaryVariant = Color(0xFF8F7BFF),
+        accentGradient = listOf(Color(0xFF9FD0FF), Color(0xFFC9B6FF), Color(0xFFFF9EC4)),
+        nativeAccentHex = "#C9B6FF",
+        onSecondary = Color(0xFF120C24),
+        onSecondaryVariant = Color.White,
+        focusRing = Color(0xFFE2D8FF),
+        focusBackground = Color(0xFF2A2140),
+        background = Color(0xFF0A0716),
+        backgroundElevated = Color(0xFF16112A),
+        backgroundCard = Color(0xFF1E1836),
+    )
+
     fun getColorPalette(
         theme: AppTheme,
         customColors: CustomThemeColors = CustomThemeColors.Default,
@@ -190,5 +205,6 @@ object ThemeColors {
         AppTheme.AMBER -> Amber
         AppTheme.ROSE -> Rose
         AppTheme.WHITE -> White
+        AppTheme.GLASS -> Glass
     }
 }
