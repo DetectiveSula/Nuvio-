@@ -1599,6 +1599,13 @@
     <string name="home_empty_no_rows_title">No Home content available</string>
     <string name="home_load_failed_title">Couldn’t load Home</string>
     <string name="home_view_details">View Details</string>
+    <string name="home_my_list">My List</string>
+    <string name="home_spotlight_new">New</string>
+    <string name="home_tab_home">Home</string>
+    <string name="home_tab_movies">Movies</string>
+    <string name="home_tab_series">Series</string>
+    <string name="home_tab_services">Services</string>
+    <string name="home_top10_title">Top 10 · %1$s</string>
     <string name="meta_section_actions_description">Play and save controls.</string>
     <string name="meta_section_actions_title">Actions</string>
     <string name="meta_section_cast_description">Principal cast list.</string>

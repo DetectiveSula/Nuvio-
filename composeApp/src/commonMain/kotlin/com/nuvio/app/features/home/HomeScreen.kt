@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.setValue
@@ -54,6 +55,9 @@ import com.nuvio.app.features.home.components.HomeContinueWatchingSection
 import com.nuvio.app.features.home.components.HomeEmptyStateCard
 import com.nuvio.app.features.home.components.HomeHeroReservedSpace
 import com.nuvio.app.features.home.components.HomeHeroSection
+import com.nuvio.app.features.home.components.HomeSpotlightHero
+import com.nuvio.app.features.home.components.HomeTab
+import com.nuvio.app.features.home.components.HomeTop10Row
 import com.nuvio.app.features.home.components.HomeSkeletonHero
 import com.nuvio.app.features.home.components.HomeSkeletonRow
 import com.nuvio.app.features.home.components.HomeContinueWatchingSectionBottomPadding
@@ -980,6 +984,17 @@ fun HomeScreen(
             }
         }
 
+        // Phones get the Spotlight banner with Home / Movies / Series / Services tabs.
+        val useSpotlightHero = maxWidth.value < 600f
+        var homeTab by rememberSaveable { mutableStateOf(HomeTab.HOME) }
+        val activeHomeTab = if (useSpotlightHero) homeTab else HomeTab.HOME
+        val spotlightItems = remember(homeHeroState.items, activeHomeTab) {
+            activeHomeTab.filterFeatured(homeHeroState.items)
+        }
+        val top10Section = remember(homeUiState.sections) {
+            homeUiState.sections.firstOrNull { it.items.size >= 5 }
+        }
+
         val heroStretchState = rememberHeroStretchState(homeListState)
         val heroStretchModifier = if (showHeroSlot) {
             Modifier.nestedScroll(heroStretchState.nestedScrollConnection)
@@ -1006,6 +1021,14 @@ fun HomeScreen(
                                 modifier = Modifier,
                                 viewportHeight = maxHeight,
                                 mobileBelowSectionHeightHint = mobileHeroBelowSectionHeightHint,
+                            )
+
+                            homeUiState.heroItems.isNotEmpty() && useSpotlightHero -> HomeSpotlightHero(
+                                items = spotlightItems,
+                                selectedTab = homeTab,
+                                onTabSelected = { homeTab = it },
+                                onItemClick = onPosterClick,
+                                onItemLongClick = onPosterLongClick,
                             )
 
                             homeUiState.heroItems.isNotEmpty() -> HomeHeroSection(
@@ -1148,25 +1171,38 @@ fun HomeScreen(
                 }
 
                 else -> {
-                    homeContinueWatchingSections(
-                        preferences = continueWatchingPreferences,
-                        continueWatchingItems = continueWatchingItems,
-                        upcomingItems = upcomingItems,
-                        dataSourceKey = effectiveWatchProgressSource,
-                        sectionPadding = homeSectionPadding,
-                        layout = continueWatchingLayout,
-                        continueWatchingListState = continueWatchingListState,
-                        upcomingListState = upcomingListState,
-                        onItemClick = onContinueWatchingClick,
-                        onItemLongPress = onContinueWatchingLongPress,
-                        disintegrationRequest = continueWatchingDisintegrationRequest,
-                    )
+                    if (activeHomeTab.showsContinueWatching) {
+                        homeContinueWatchingSections(
+                            preferences = continueWatchingPreferences,
+                            continueWatchingItems = continueWatchingItems,
+                            upcomingItems = upcomingItems,
+                            dataSourceKey = effectiveWatchProgressSource,
+                            sectionPadding = homeSectionPadding,
+                            layout = continueWatchingLayout,
+                            continueWatchingListState = continueWatchingListState,
+                            upcomingListState = upcomingListState,
+                            onItemClick = onContinueWatchingClick,
+                            onItemLongPress = onContinueWatchingLongPress,
+                            disintegrationRequest = continueWatchingDisintegrationRequest,
+                        )
+                    }
+
+                    if (useSpotlightHero && activeHomeTab == HomeTab.HOME && top10Section != null) {
+                        item(key = "home_top10", contentType = "top10") {
+                            HomeTop10Row(
+                                section = top10Section,
+                                modifier = Modifier.padding(bottom = 16.dp),
+                                horizontalPadding = homeSectionPadding,
+                                onPosterClick = onPosterClick,
+                            )
+                        }
+                    }
 
                     keyedEnabledHomeItems.forEach { keyedSettingsItem ->
                         val settingsItem = keyedSettingsItem.value
                         if (settingsItem.isCollection) {
                             val collection = collectionsMap[settingsItem.key]
-                            if (collection != null) {
+                            if (collection != null && activeHomeTab.showsCollections) {
                                 item(key = keyedSettingsItem.lazyKey, contentType = "collection") {
                                     HomeCollectionRowSection(
                                         collection = collection,
@@ -1179,7 +1215,11 @@ fun HomeScreen(
                             }
                         } else {
                             val section = sectionsMap[settingsItem.key]
-                            if (section != null && section.items.isNotEmpty()) {
+                            if (
+                                section != null &&
+                                section.items.isNotEmpty() &&
+                                activeHomeTab.showsCatalog(section.target.contentType)
+                            ) {
                                 item(key = keyedSettingsItem.lazyKey, contentType = "catalog") {
                                     HomeCatalogRowSection(
                                         section = section,
