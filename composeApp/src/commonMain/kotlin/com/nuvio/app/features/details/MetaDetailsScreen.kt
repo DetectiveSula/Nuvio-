@@ -1818,8 +1818,10 @@ private fun DetailHeaderOverlay(
                     top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 8.dp,
                 )
                 .zIndex(2f),
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.onBackground,
+            // Frosted round button over the artwork, matching the Home screen's glass style.
+            containerColor = Color(0xFF1C1C20).copy(alpha = 0.45f),
+            contentColor = Color.White,
+            buttonSize = 44.dp,
         )
     }
 

@@ -89,7 +89,7 @@ fun DetailFloatingHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .clipToBounds()
-                .background(surfaceColor),
+                .background(surfaceColor.copy(alpha = 0.88f)),
         ) {
             Row(
                 modifier = Modifier

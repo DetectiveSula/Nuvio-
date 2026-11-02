@@ -1,9 +1,12 @@
 package com.nuvio.app.features.details.components
 
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -51,6 +56,7 @@ import nuvio.composeapp.generated.resources.details_actions_menu_label
 import nuvio.composeapp.generated.resources.hero_add_to_library
 import nuvio.composeapp.generated.resources.hero_mark_unwatched
 import nuvio.composeapp.generated.resources.hero_mark_watched
+import nuvio.composeapp.generated.resources.home_my_list
 import nuvio.composeapp.generated.resources.hero_remove_from_library
 import nuvio.composeapp.generated.resources.playback_unavailable
 import nuvio.composeapp.generated.resources.random_episode_title
@@ -72,6 +78,9 @@ fun DetailActionButtons(
     playLabel: String = stringResource(Res.string.action_play),
     playEnabled: Boolean = true,
     pinnedAction: DetailSecondaryAction? = null,
+    /** Shown as a frosted labelled pill next to Play (e.g. My List). */
+    pillAction: DetailSecondaryAction? = null,
+    pillLabel: String? = null,
     secondaryActions: List<DetailSecondaryAction> = emptyList(),
     actionsMenuLabel: String = stringResource(Res.string.details_actions_menu_label),
     isTablet: Boolean = false,
@@ -143,6 +152,56 @@ fun DetailActionButtons(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
+                }
+            }
+
+            if (pillAction != null) {
+                Spacer(modifier = Modifier.width(12.dp))
+                // Collapses to just its icon while the "more" menu is open, so Play keeps room.
+                val pillWidth by animateDpAsState(
+                    targetValue = if (actionsExpanded) iconButtonSize else 128.dp,
+                    animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing),
+                    label = "detail_pill_action_width",
+                )
+                val pillShape = RoundedCornerShape(40.dp)
+                Row(
+                    modifier = Modifier
+                        .width(pillWidth)
+                        .height(buttonHeight)
+                        .clip(pillShape)
+                        .background(Color.White.copy(alpha = 0.14f))
+                        .border(1.dp, Color.White.copy(alpha = 0.2f), pillShape)
+                        .combinedClickable(
+                            onClick = {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                pillAction.onClick()
+                            },
+                            onLongClick = pillAction.onLongClick?.let { longClick ->
+                                {
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    longClick()
+                                }
+                            },
+                            role = Role.Button,
+                        ),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = pillAction.icon,
+                        contentDescription = pillAction.label,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp),
+                    )
+                    if (pillLabel != null && pillWidth > iconButtonSize + 40.dp) {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = pillLabel,
+                            color = Color.White,
+                            style = if (isTablet) MaterialTheme.typography.titleMedium else MaterialTheme.typography.titleSmall,
+                            maxLines = 1,
+                        )
+                    }
                 }
             }
 
@@ -269,6 +328,14 @@ fun DetailActions(
         playLabel = if (playEnabled) playLabel else stringResource(Res.string.playback_unavailable),
         playEnabled = playEnabled,
         pinnedAction = shuffleAction?.takeIf { shuffleEnabled },
+        pillAction = DetailSecondaryAction(
+            label = stringResource(if (isSaved) Res.string.hero_remove_from_library else Res.string.hero_add_to_library),
+            icon = if (isSaved) Icons.Default.Check else Icons.Default.Add,
+            isActive = isSaved,
+            onClick = onSaveClick,
+            onLongClick = onSaveLongClick,
+        ),
+        pillLabel = stringResource(Res.string.home_my_list),
         secondaryActions = buildList {
             if (!shuffleEnabled) shuffleAction?.let(::add)
             add(
@@ -277,15 +344,6 @@ fun DetailActions(
                     icon = if (isWatched) Icons.Default.CheckCircle else Icons.Default.CheckCircleOutline,
                     isActive = isWatched,
                     onClick = onWatchedClick,
-                ),
-            )
-            add(
-                DetailSecondaryAction(
-                    label = stringResource(if (isSaved) Res.string.hero_remove_from_library else Res.string.hero_add_to_library),
-                    icon = if (isSaved) Icons.Default.Check else Icons.Default.Add,
-                    isActive = isSaved,
-                    onClick = onSaveClick,
-                    onLongClick = onSaveLongClick,
                 ),
             )
         },
