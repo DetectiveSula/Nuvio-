@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
-import kotlinx.coroutines.delay
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -278,15 +276,13 @@ internal fun PlayerScreenRuntime.RenderPlayerRuntimeUi() {
         }
 
         val seekPreviewSource = if (isP2pPlaybackActive) null else seekPreviewSourceOrNull(activeSourceUrl, activeSourceHeaders)
-        val seekPreviewWidthPx = with(LocalDensity.current) { SeekPreviewWidth.roundToPx() }
         val seekPreviewStore = remember(seekPreviewSource) {
-            seekPreviewSource?.let { SeekPreviewStore(it, seekPreviewWidthPx) }
+            seekPreviewSource?.let { SeekPreviewStore(it, SeekPreviewFrameWidthPx) }
         }
         DisposableEffect(seekPreviewStore) { onDispose { seekPreviewStore?.release() } }
         val seekPreviewDurationKnown = playbackSnapshot.durationMs > 0L
         LaunchedEffect(seekPreviewStore, seekPreviewDurationKnown) {
             if (seekPreviewStore == null || !seekPreviewDurationKnown) return@LaunchedEffect
-            delay(6_000) // let playback start and buffer before fetching preview frames
             seekPreviewStore.run(playbackSnapshot.durationMs, playbackSnapshot.positionMs)
         }
         CompositionLocalProvider(LocalSeekPreviewStore provides seekPreviewStore) {

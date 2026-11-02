@@ -98,6 +98,7 @@ open class MainActivity : AppCompatActivity() {
         ServerConfigurationStorage.initialize(applicationContext)
         LibraryStorage.initialize(applicationContext)
         WatchedStorage.initialize(applicationContext)
+        com.nuvio.app.features.player.SeekPreviewPlatform.initialize(applicationContext)
         MetaScreenSettingsStorage.initialize(applicationContext)
         com.nuvio.app.features.shuffle.EpisodeShuffleStorage.initialize(applicationContext)
         HomeCatalogSettingsStorage.initialize(applicationContext)

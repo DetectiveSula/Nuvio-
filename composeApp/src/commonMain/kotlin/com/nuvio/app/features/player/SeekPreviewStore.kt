@@ -10,16 +10,23 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.math.abs
 
-private const val TargetFrameCount = 100L
-private const val MinIntervalMs = 15_000L
-private const val MaxIntervalMs = 90_000L
-private const val WorkerCount = 2
+private const val FrameSpacingMs = 10_000L
+private const val MaxFrames = 400L
+private const val OverviewSpacingMs = 120_000L
+private const val WorkerCount = 1
 private const val GiveUpAfterFailures = 4
 
+/** Frames are fetched small (and shown at [SeekPreviewWidth]) to keep memory low. */
+internal const val SeekPreviewFrameWidthPx = 240
+
 /**
- * Seek-bar preview frames for one stream. [run] quietly prefetches ~100 small frames across the
- * whole video, nearest to the current position first, with two parallel workers. While the user
- * scrubs, [request] moves the frame under their finger to the front of the queue.
+ * Seek-bar preview frames for one stream, one every 10 seconds (wider only for very long videos,
+ * capped at [MaxFrames]). [run] fills them in three passes so there are never big gaps:
+ * 1. one frame every 2 minutes across the whole video,
+ * 2. every frame within 10 minutes of the current position,
+ * 3. every remaining frame, nearest first.
+ * While the user scrubs, [request] moves the frame under their finger to the front of the queue.
+ * A single extractor is used so previews never take more than one hardware decoder.
  */
 internal class SeekPreviewStore(
     source: SeekPreviewSource,
@@ -34,7 +41,7 @@ internal class SeekPreviewStore(
     private val queue = ArrayDeque<Long>()
     private var failures = 0
 
-    var intervalMs: Long = MinIntervalMs
+    var intervalMs: Long = FrameSpacingMs
         private set
 
     fun bucketOf(positionMs: Long): Long = (positionMs.coerceAtLeast(0L) / intervalMs)
@@ -52,15 +59,26 @@ internal class SeekPreviewStore(
     /** Runs until cancelled (when the player closes or the stream changes). */
     suspend fun run(durationMs: Long, startPositionMs: Long) = coroutineScope {
         if (durationMs <= 0L) return@coroutineScope
-        intervalMs = (durationMs / TargetFrameCount).coerceIn(MinIntervalMs, MaxIntervalMs)
+        intervalMs = maxOf(FrameSpacingMs, durationMs / MaxFrames)
         val count = durationMs / intervalMs + 1
         val start = bucketOf(startPositionMs).coerceIn(0L, count - 1)
+        val order = LinkedHashSet<Long>()
+        // Pass 1: coarse overview of the whole video.
+        val overviewStep = (OverviewSpacingMs / intervalMs).coerceAtLeast(1L)
+        var overview = 0L
+        while (overview < count) {
+            order.add(overview)
+            overview += overviewStep
+        }
+        // Passes 2 and 3: every frame, nearest to the current position first, so the 10 minutes
+        // around the viewer fill in before the rest of the video.
+        for (distance in 0 until count) {
+            if (start + distance < count) order.add(start + distance)
+            if (distance > 0 && start - distance >= 0) order.add(start - distance)
+        }
         lock.withLock {
             queue.clear()
-            for (distance in 0 until count) {
-                if (start + distance < count) queue.addLast(start + distance)
-                if (distance > 0 && start - distance >= 0) queue.addLast(start - distance)
-            }
+            queue.addAll(order)
         }
         grabbers.forEach { grabber -> launch { work(grabber, durationMs) } }
     }
