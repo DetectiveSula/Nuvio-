@@ -48,9 +48,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -153,12 +156,34 @@ fun HomeSpotlightHero(
     }
 
     // Clip so the enlarged, blurred backdrop can't spill below the banner.
+    val glassFade = isGlassTheme()
     Box(modifier = modifier.fillMaxWidth().clipToBounds()) {
-        // Blurred artwork of the current card fills the whole banner area behind it.
+        // Blurred artwork of the current card fills the whole banner area behind it. In the Glass
+        // theme it fades out towards the bottom so the drifting background glows show through.
         Crossfade(
             targetState = currentItem,
             animationSpec = tween(700),
-            modifier = Modifier.matchParentSize(),
+            modifier = Modifier
+                .matchParentSize()
+                .then(
+                    if (glassFade) {
+                        Modifier
+                            .graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+                            .drawWithContent {
+                                drawContent()
+                                drawRect(
+                                    brush = Brush.verticalGradient(
+                                        0f to Color.Black,
+                                        0.55f to Color.Black,
+                                        1f to Color.Transparent,
+                                    ),
+                                    blendMode = BlendMode.DstIn,
+                                )
+                            }
+                    } else {
+                        Modifier
+                    },
+                ),
             label = "SpotlightBackdrop",
         ) { item ->
             AsyncImage(
@@ -175,12 +200,20 @@ fun HomeSpotlightHero(
             modifier = Modifier
                 .matchParentSize()
                 .background(
-                    Brush.verticalGradient(
-                        0f to background.copy(alpha = 0.45f),
-                        0.35f to background.copy(alpha = 0.30f),
-                        0.75f to background.copy(alpha = 0.80f),
-                        1f to background,
-                    ),
+                    if (glassFade) {
+                        Brush.verticalGradient(
+                            0f to background.copy(alpha = 0.40f),
+                            0.35f to background.copy(alpha = 0.20f),
+                            1f to Color.Transparent,
+                        )
+                    } else {
+                        Brush.verticalGradient(
+                            0f to background.copy(alpha = 0.45f),
+                            0.35f to background.copy(alpha = 0.30f),
+                            0.75f to background.copy(alpha = 0.80f),
+                            1f to background,
+                        )
+                    },
                 ),
         )
 
