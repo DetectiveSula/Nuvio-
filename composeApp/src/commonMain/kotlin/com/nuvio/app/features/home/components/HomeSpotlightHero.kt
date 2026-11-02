@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -149,7 +150,8 @@ fun HomeSpotlightHero(
         pagerState.animateScrollToPage(pagerState.currentPage + 1)
     }
 
-    Box(modifier = modifier.fillMaxWidth()) {
+    // Clip so the enlarged, blurred backdrop can't spill below the banner.
+    Box(modifier = modifier.fillMaxWidth().clipToBounds()) {
         // Blurred artwork of the current card fills the whole banner area behind it.
         Crossfade(
             targetState = currentItem,
@@ -191,8 +193,8 @@ fun HomeSpotlightHero(
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalPager(
                 state = pagerState,
-                contentPadding = PaddingValues(horizontal = 30.dp),
-                pageSpacing = 14.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                pageSpacing = 10.dp,
                 modifier = Modifier.fillMaxWidth(),
             ) { page ->
                 val item = items[page % items.size]
@@ -300,7 +302,7 @@ private fun SpotlightCard(
         modifier = modifier
             .fillMaxWidth()
             .widthIn(max = 420.dp)
-            .aspectRatio(0.78f)
+            .aspectRatio(0.72f)
             .shadow(26.dp, shape)
             .clip(shape)
             .background(MaterialTheme.colorScheme.surfaceVariant)
@@ -334,7 +336,11 @@ private fun SpotlightCard(
         ) {
             Text(
                 text = spotlightTag(item),
-                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .padding(horizontal = 8.dp, vertical = 3.dp),
+                color = Color.White,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.ExtraBold,
                 letterSpacing = 1.5.sp,
