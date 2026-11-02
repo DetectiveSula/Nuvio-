@@ -173,19 +173,19 @@ object ThemeColors {
         backgroundCard = Color(0xFF222222),
     )
 
-    /** Glass: deep violet-black base for the frosted Glass look (see GlassStyle.kt). */
+    /** Glass: neutral near-black with silver accents for the frosted Glass look (see GlassStyle.kt). */
     val Glass = ThemeColorPalette(
-        secondary = Color(0xFFC9B6FF),
-        secondaryVariant = Color(0xFF8F7BFF),
-        accentGradient = listOf(Color(0xFF9FD0FF), Color(0xFFC9B6FF), Color(0xFFFF9EC4)),
-        nativeAccentHex = "#C9B6FF",
-        onSecondary = Color(0xFF120C24),
-        onSecondaryVariant = Color.White,
-        focusRing = Color(0xFFE2D8FF),
-        focusBackground = Color(0xFF2A2140),
-        background = Color(0xFF0A0716),
-        backgroundElevated = Color(0xFF16112A),
-        backgroundCard = Color(0xFF1E1836),
+        secondary = Color(0xFFE5E5EA),
+        secondaryVariant = Color(0xFFA1A1A6),
+        accentGradient = listOf(Color(0xFFFFFFFF), Color(0xFFE5E5EA), Color(0xFFA1A1A6)),
+        nativeAccentHex = "#E5E5EA",
+        onSecondary = Color(0xFF111111),
+        onSecondaryVariant = Color(0xFF111111),
+        focusRing = Color(0xFFFFFFFF),
+        focusBackground = Color(0xFF2C2C30),
+        background = Color(0xFF0B0B0D),
+        backgroundElevated = Color(0xFF18181C),
+        backgroundCard = Color(0xFF202024),
     )
 
     fun getColorPalette(

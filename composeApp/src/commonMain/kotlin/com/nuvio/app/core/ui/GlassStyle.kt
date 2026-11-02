@@ -29,13 +29,13 @@ import androidx.compose.ui.unit.dp
 @ReadOnlyComposable
 fun isGlassTheme(): Boolean = LocalAppTheme.current == AppTheme.GLASS
 
-private val GlassViolet = Color(0xFF7B3FE4)
-private val GlassPink = Color(0xFFE4527A)
-private val GlassBlue = Color(0xFF2F9BE4)
+private val GlassWhite = Color(0xFFFFFFFF)
+private val GlassSilver = Color(0xFFC7CCD6)
+private val GlassMist = Color(0xFFE5E5EA)
 
 /**
- * The Glass theme's background: the theme colour with soft violet, pink and blue glows that
- * drift slowly. Only redraws (no recomposition) while animating.
+ * The Glass theme's background: near-black with soft white and silver glows that drift
+ * slowly. Only redraws (no recomposition) while animating.
  */
 @Composable
 fun GlassBackdrop(modifier: Modifier = Modifier) {
@@ -53,9 +53,9 @@ fun GlassBackdrop(modifier: Modifier = Modifier) {
             val w = size.width
             val h = size.height
             val radius = w * 0.95f
-            glow(GlassViolet.copy(alpha = 0.55f), Offset(w * (0.08f + 0.12f * drift), h * (0.10f + 0.04f * drift)), radius)
-            glow(GlassPink.copy(alpha = 0.42f), Offset(w * (0.96f - 0.14f * drift), h * (0.42f + 0.05f * drift)), radius)
-            glow(GlassBlue.copy(alpha = 0.42f), Offset(w * (0.14f + 0.12f * drift), h * (0.86f - 0.05f * drift)), radius)
+            glow(GlassWhite.copy(alpha = 0.14f), Offset(w * (0.08f + 0.12f * drift), h * (0.10f + 0.04f * drift)), radius)
+            glow(GlassSilver.copy(alpha = 0.12f), Offset(w * (0.96f - 0.14f * drift), h * (0.42f + 0.05f * drift)), radius)
+            glow(GlassMist.copy(alpha = 0.10f), Offset(w * (0.14f + 0.12f * drift), h * (0.86f - 0.05f * drift)), radius)
         },
     )
 }
